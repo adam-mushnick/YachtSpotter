@@ -16,6 +16,8 @@ builder.Services.AddDbContext<StoreContext>(opt =>
     //needs connection string to connect efcore to database
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+//adding CORS configuration, allow cross origin requests
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -25,6 +27,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//allow cors from this domain origin
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+});
 
 app.UseHttpsRedirection();
 
@@ -45,8 +53,8 @@ var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 try
 {
     //creates database if it doesn't exist, adds any pending migrations to existing db
-     context.Database.Migrate();
-     DbInitializer.Initialize(context);
+    context.Database.Migrate();
+    DbInitializer.Initialize(context);
 }
 catch (Exception ex)
 {
