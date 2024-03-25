@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Catalog from '../../features/catalog/Catalog';
 import { Product } from '../models/product';
+import Header from './Header';
+import { Container, CssBaseline } from '@mui/material';
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -9,13 +11,16 @@ function App() {
     fetch('http://localhost:5000/api/products')
       .then((response) => response.json())
       .then((data) => setProducts(data));
-  });
+  }, []);
 
   return (
-    <div>
-      <h1>YachtSpotter</h1>
-      <Catalog products={products} />
-    </div>
+    <>
+      <CssBaseline />
+      <Header />
+      <Container sx={{p: 0}}>
+        <Catalog products={products} />
+      </Container>
+    </>
   );
 }
 

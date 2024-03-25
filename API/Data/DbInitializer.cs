@@ -53,6 +53,15 @@ namespace API.Data
                 new Product { Name = "The Dual Dream", Description = "A catamaran yacht that epitomizes the dream of luxurious and stable sailing, perfect for exotic adventures.", Price = 2700000, PictureUrl = "/images/products/catamaran-yacht-dual-dream.png", LengthOverall = 48, Type = "Catamaran Yacht", QuantityInStock = 4 },
             };
 
+            //add photos based on name of photo
+            int yachtImageNumber = 1; // Start from yacht1
+            foreach (var product in products)
+            {
+                product.PictureUrl = $"/images/products/yacht{yachtImageNumber}.jpg";
+                yachtImageNumber++;
+                if (yachtImageNumber > 7) yachtImageNumber = 1; // Reset to yacht1 after yacht7
+            }
+
             foreach (var product in products)
             {
                 context.Products.Add(product);

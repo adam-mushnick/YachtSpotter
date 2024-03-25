@@ -1,20 +1,15 @@
-import { Product } from "../../app/models/product";
+import { Product } from '../../app/models/product';
+import ProductList from './ProductList';
 
 //specifying required properties to passed down to this component
-interface Props{
+interface Props {
   products: Product[];
 }
 
-export default function Catalog(props: Props) {
+export default function Catalog({products}: Props) {
   return (
     <>
-      <ul>
-        {props.products.map((product) => (
-          <li key={product.id}>
-            {product.name} - {product.price}
-          </li>
-        ))}
-      </ul>
+<ProductList products={products}/>
     </>
   );
 }
