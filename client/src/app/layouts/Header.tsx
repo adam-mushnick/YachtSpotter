@@ -12,8 +12,15 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SailingIcon from '@mui/icons-material/Sailing';
+import { Badge, List, ListItem } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import { ShoppingCart } from '@mui/icons-material';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [
+  { title: 'catalog', path: '/catalog' },
+  { title: 'about', path: '/about' },
+  { title: 'contact', path: '/contact' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Header() {
@@ -47,8 +54,8 @@ export default function Header() {
           <Typography
             variant='h6'
             noWrap
-            component='a'
-            href='#app-bar-with-responsive-menu'
+            component={NavLink}
+            to='/'
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -90,14 +97,23 @@ export default function Header() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>{page}</Typography>
-                </MenuItem>
-              ))}
+              {/* mapping over links */}
+              <List sx={{ display: 'flex' }}>
+                {pages.map(({ title, path }) => (
+                  <ListItem
+                    component={NavLink}
+                    to={path}
+                    key={path}
+                    sx={{ color: 'inherit', typography: 'h6' }}
+                  >
+                    {title.toUpperCase()}
+                  </ListItem>
+                ))}
+              </List>
             </Menu>
           </Box>
           <SailingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+
           <Typography
             variant='h5'
             noWrap
@@ -118,15 +134,19 @@ export default function Header() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.title}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.title}
               </Button>
             ))}
           </Box>
-
+          <IconButton size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
+            <Badge badgeContent='4' color='secondary'>
+              <ShoppingCart />
+            </Badge>
+          </IconButton>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
