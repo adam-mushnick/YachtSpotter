@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore;
 //this controller is responsible for handling HTTP requests related to products in the store
 namespace API.Controllers
 {
-    //controller responds to webAPI requests
-    [ApiController]
-    //definition of route for controller with a token [controller] ( it will be ProductsController without Controller suffix)
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
 
     {
         //declaring variable to hold database context
@@ -34,7 +30,11 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             //find one product
-            return await _context.Products.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) return NotFound();
+
+            return product;
         }
     }
 }

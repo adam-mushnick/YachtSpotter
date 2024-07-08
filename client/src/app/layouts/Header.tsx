@@ -12,9 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SailingIcon from '@mui/icons-material/Sailing';
-import { Badge, List, ListItem } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { Badge } from '@mui/material';
+import { Link, NavLink } from 'react-router-dom';
 import { ShoppingCart } from '@mui/icons-material';
+import { useStoreContext } from '../context/StoreContext';
 
 const pages = [
   { title: 'catalog', path: '/catalog' },
@@ -24,6 +25,9 @@ const pages = [
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Header() {
+  const { basket } = useStoreContext();
+  const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -98,18 +102,17 @@ export default function Header() {
               }}
             >
               {/* mapping over links */}
-              <List sx={{ display: 'flex' }}>
-                {pages.map(({ title, path }) => (
-                  <ListItem
-                    component={NavLink}
-                    to={path}
-                    key={path}
-                    sx={{ color: 'inherit', typography: 'h6' }}
-                  >
-                    {title.toUpperCase()}
-                  </ListItem>
-                ))}
-              </List>
+              {pages.map(({ title, path }) => (
+                <MenuItem
+                  component={NavLink}
+                  to={path}
+                  key={path}
+                  onClick={handleCloseNavMenu}
+                  sx={{ color: 'inherit', typography: 'h6' }}
+                >
+                  {title.toUpperCase()}
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
           <SailingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -117,8 +120,8 @@ export default function Header() {
           <Typography
             variant='h5'
             noWrap
-            component='a'
-            href='#app-bar-with-responsive-menu'
+            component={NavLink}
+            to='/'
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -132,18 +135,27 @@ export default function Header() {
             YachtSpotter
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map(({ title, path }) => (
               <Button
-                key={page.title}
+                component={NavLink}
+                to={path}
+                key={path}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page.title}
+                {title}
               </Button>
             ))}
           </Box>
-          <IconButton size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
-            <Badge badgeContent='4' color='secondary'>
+          <IconButton
+            component={Link}
+            to='/basket'
+            size='large'
+            edge='start'
+            color='inherit'
+            sx={{ mr: 2 }}
+          >
+            <Badge badgeContent={itemCount} color='secondary'>
               <ShoppingCart />
             </Badge>
           </IconButton>
